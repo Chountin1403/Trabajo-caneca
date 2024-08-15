@@ -1,0 +1,37 @@
+#include <Servo.h>
+int servoPin = 10;
+Servo myServo;
+int TRIG = 6;     // trigger en pin 6
+int ECO = 5;      // echo en pin 5
+int DURACION;
+int DISTANCIA;
+void setup()
+{
+  pinMode(TRIG, OUTPUT);  // trigger como salida
+  pinMode(ECO, INPUT);    // echo como entrada
+  Serial.begin(9600);     // inicializacion de comunicacion serial a 9600 bps
+  myServo.attach(servoPin);
+  Serial.begin(9600);
+}
+void loop()
+{
+  // generacion del pulso a enviar
+  digitalWrite(TRIG, HIGH);                    
+  delay(1);                                    
+  digitalWrite(TRIG, LOW);    
+  DURACION = pulseIn(ECO, HIGH);                // con funcion pulseIn se espera un pulso
+                                                // alto en Echo
+  DISTANCIA = DURACION / 58.2;                  // distancia medida en centimetros
+  Serial.println(DISTANCIA);                    // envio de valor de distancia por monitor serial
+  delay(200);                                   // demora entre datos
+  if(DISTANCIA>0 &&DISTANCIA <15){
+    myServo.write(0);
+    delay(2000);
+    myServo.write(180);
+    delay(2000);
+  }
+  else{
+    myServo.write(0);
+    delay(2000);
+  }
+}
